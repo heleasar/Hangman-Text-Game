@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+// Function to generate a random word
+string getRandomWord() {
+    vector<string> words = {"apple", "banana", "orange", "grape", "strawberry", "pineapple"};
+    srand(time(nullptr));
+    return words[rand() % words.size()];
+}
+
+// Function to check if a character is in the word
+bool containsChar(const string& word, char c) {
+    for (char ch : word) {
+        if (ch == c) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Function to update the display word with guessed characters
+string updateDisplayWord(const string& word, const string& displayWord, char guess) {
+    string updatedDisplayWord = displayWord;
+    for (size_t i = 0; i < word.length(); ++i) {
+        if (word[i] == guess) {
+            updatedDisplayWord[i] = guess;
+        }
+    }
+    return updatedDisplayWord;
+}
+
+int main() {
+    cout << "Welcome to Hangman!" << endl;
+
+    string word = getRandomWord();
+    string displayWord(word.length(), '_');
+    const int maxAttempts = 6;
+    int attemptsLeft = maxAttempts;
+
+    while (attemptsLeft > 0 && displayWord != word) {
+        cout << "Word: " << displayWord << endl;
+        cout << "Attempts left: " << attemptsLeft << endl;
+
+        char guess;
+        cout << "Enter your guess: ";
+        cin >> guess;
+
+        if (containsChar(word, guess)) {
+            displayWord = updateDisplayWord(word, displayWord, guess);
+            cout << "Correct guess!" << endl;
+        } else {
+            cout << "Incorrect guess!" << endl;
+            --attemptsLeft;
+        }
+
+        cout << endl;
+    }
+
+    if (displayWord == word) {
+        cout << "Congratulations! You guessed the word: " << word << endl;
+    } else {
+        cout << "Sorry, you ran out of attempts. The word was: " << word << endl;
+    }
+
+    return 0;
+}
